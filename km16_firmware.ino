@@ -27,19 +27,45 @@ public:
 
       if (key == 4)
       {
-        bool n = !isUnderglowEnabled();
+        bool n = !getEnableUnderglow();
         Serial.print("Setting underglow: ");
         Serial.println(n ? "enabled" : "disabled");
-        enableUnderglow(n);
+        setEnableUnderglow(n);
       }
 
       if (key == 5)
       {
-        lc++;
-        unsigned long rgb = ((lc & 0x04) ? 0xFF0000 : 0) | ((lc & 0x02) ? 0x00FF00 : 0) | ((lc & 0x01) ? 0x0000FF : 0);
+        ulc++;
+        unsigned long rgb = ((ulc & 0x04) ? 0xFF0000 : 0) | ((ulc & 0x02) ? 0x00FF00 : 0) | ((ulc & 0x01) ? 0x0000FF : 0);
         Serial.print("Setting underglow color: ");
         Serial.println(rgb, HEX);
         setUnderglow(rgb);
+      }
+
+
+      if (key == 8)
+      {
+        bool n = !getEnableKeyLeds();
+        Serial.print("Setting keyleds: ");
+        Serial.println(n ? "enabled" : "disabled");
+        setEnableKeyLeds(n);
+      }
+
+      if (key == 9)
+      {
+        klc++;
+        unsigned long rgb = ((klc & 0x04) ? 0xFF0000 : 0) | ((klc & 0x02) ? 0x00FF00 : 0) | ((klc & 0x01) ? 0x0000FF : 0);
+        Serial.print("Setting key led color: ");
+        Serial.println(rgb, HEX);
+        setKeyLeds(rgb);
+      }
+
+      if (key == 15)
+      {
+        bool n = !getEnableLeds();
+        Serial.print("Enabling LEDs: ");
+        Serial.println(n ? "enabled" : "disabled");
+        setEnableLeds(n);
       }
     }
   }
@@ -52,7 +78,8 @@ public:
     Serial.println(delta);
   }
 
-  int lc = 0;
+  int ulc = 0;
+  int klc = 0;
 
 };
 
