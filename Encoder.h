@@ -27,10 +27,15 @@ public:
     bool stateB = digitalRead(_pinB);
     if (stateA != _lastA) 
     {
-        _lastA  = stateA;
-        if (stateA)
+        unsigned long now = millis();
+        if (now - _lastTime >= 2)
         {
-          _callback(_ctx, stateA == stateB ? 1 : -1);
+          _lastA  = stateA;
+          _lastTime = now;
+          if (stateA)
+          {
+            _callback(_ctx, stateA == stateB ? 1 : -1);
+          }
         }
     }    
   }
@@ -40,6 +45,7 @@ public:
   int _pinA = -1;
   int _pinB = -1;
   bool _lastA = false;
+  unsigned long _lastTime = 0;
 };
 
 
