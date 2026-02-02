@@ -24,7 +24,7 @@ try {
   outReport[3] = 0x00; // G
   outReport[4] = 0x00; // B
 
-  for (let i=0; i<16; i++)
+  for (let i=1; i<=2; i++)
   {
     outReport[2] = (i & 4) ? 0xFF : 0; // R
     outReport[3] = (i & 2) ? 0xFF : 0; // G
