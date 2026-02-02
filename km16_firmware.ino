@@ -25,6 +25,22 @@ public:
         setLayerColor(nlc);
       }
 
+      if (key == 4)
+      {
+        bool n = !isUnderglowEnabled();
+        Serial.print("Setting underglow: ");
+        Serial.println(n ? "enabled" : "disabled");
+        enableUnderglow(n);
+      }
+
+      if (key == 5)
+      {
+        lc++;
+        unsigned long rgb = ((lc & 0x04) ? 0xFF0000 : 0) | ((lc & 0x02) ? 0x00FF00 : 0) | ((lc & 0x01) ? 0x0000FF : 0);
+        Serial.print("Setting underglow color: ");
+        Serial.println(rgb, HEX);
+        setUnderglow(rgb);
+      }
     }
   }
 

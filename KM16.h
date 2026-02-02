@@ -68,6 +68,12 @@ public:
     digitalWrite(PB6, HIGH);
     digitalWrite(PB7, HIGH);
     digitalWrite(PB8, HIGH);
+
+    // Configure underglow
+    pinMode(PB9, OUTPUT);     // Data pin
+    pinMode(PB12, OUTPUT);    // Power enable pin
+    digitalWrite(PB9, LOW);   
+    digitalWrite(PB12, HIGH);   // Power enable (active LOW)
 }
 
   void update()
@@ -80,6 +86,11 @@ public:
     // Poll keyboard matrix
     pollMatrix();
 
+    if (_underglowDirty)
+    {
+      sendUnderglowPixels();
+      _underglowDirty = false;
+    }
   }
 
   virtual void onKey(int key, bool pressed)
@@ -107,6 +118,45 @@ public:
     return _layerColor;
   }
 
+  void enableUnderglow(bool enable)
+  {
+    if (_underglowEnabled == enable)
+      return;
+
+    digitalWrite(PB12, enable ? LOW : HIGH);
+
+    _underglowEnabled = enable;
+    _underglowDirty = false;
+    if (enable)
+      sendUnderglowPixels();
+  }
+
+  bool isUnderglowEnabled()
+  {
+    return _underglowEnabled;
+  }
+
+  void setUnderglow(unsigned long rgb)
+  {
+    for (int i=0; i<6; i++)
+    {
+      setUnderglow(i, rgb);
+    }
+  }
+
+  void setUnderglow(int index, unsigned long rgb)
+  {
+    if (_underglow[index] == rgb)
+      return;
+    _underglow[index] = rgb;
+    if (_underglowEnabled)
+      _underglowDirty = true;
+  }
+
+  unsigned long getUnderglow(int index)
+  {
+    return _underglow[index];
+  }
 
 private:
   struct KeyState
@@ -122,7 +172,15 @@ private:
 
   int _layerColor = 0;
 
+  bool _underglowDirty = false;
+  bool _underglowEnabled = false;
+  unsigned long _underglow[6] = { 0 };
 
+/*
+  bool _keyColorsDirty = false;
+  bool _keyColorsEnabled = false;
+  unsigned long _keyColors[16] = { 0 };
+*/
 
   static void enc0_callback(void* ctx, int delta)
   {
@@ -166,6 +224,57 @@ private:
         }
         digitalWrite(rowPins[row], HIGH);
     }    
+  }
+
+  void sendUnderglowPixels()
+  {
+    noInterrupts();
+    for (int i = 0; i < 6; i++) {
+        sendPixel(_underglow[i], 9);
+    }
+    interrupts();
+  }
+  
+  /*
+  void sendKeyPixels()
+  {
+    noInterrupts();
+    for (int i = 0; i < 16; i++) {
+        sendPixel(_keyColors[i], 11);
+    }
+    sendPixel(0, 11);
+    interrupts();
+  }
+  */
+  
+  static void sendPixel(unsigned long rgb, int bit) 
+  {
+    sendPixelByte((rgb >> 16) & 0xFF, bit);
+    sendPixelByte((rgb >> 8) & 0xFF, bit);
+    sendPixelByte((rgb >> 0) & 0xFF, bit);
+  }
+
+  static void sendPixelByte(uint8_t byte, int bit) 
+  {
+    volatile uint32_t *bsrr = &GPIOB->BSRR;
+    for (uint8_t i = 0; i < 8; i++) 
+    {
+      if (byte & 0x80) 
+      {
+        *bsrr = (1 << bit);
+        __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n");
+        *bsrr = (1 << (bit + 16));
+        __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n");
+      } 
+      else 
+      {
+        *bsrr = (1 << bit);
+        __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n");
+        *bsrr = (1 << (bit + 16));
+        __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n");
+      }
+      byte <<= 1;
+    }
   }
 
 };
