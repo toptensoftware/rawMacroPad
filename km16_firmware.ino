@@ -1,5 +1,24 @@
 #include "KM16.h"
 
+#include <Adafruit_TinyUSB.h>
+
+// 64-byte raw HID report
+const uint8_t hid_report_descriptor[] = {
+  0x06, 0x00, 0xFF,  // Vendor-defined
+  0x09, 0x01,
+  0xA1, 0x01,        // Collection
+  0x15, 0x00,
+  0x26, 0xFF, 0x00,
+  0x75, 0x08,
+  0x95, 0x40,
+  0x09, 0x00,
+  0x81, 0x02,        // Input
+  0x09, 0x00,
+  0x91, 0x02,        // Output
+  0xC0
+};
+
+Adafruit_USBD_HID hid;
 
 class Test : public KM16
 {
@@ -85,14 +104,24 @@ public:
 
 Test km;
 
-void setup() {
+void setup() 
+{
+  hid.setReportDescriptor(hid_report_descriptor, sizeof(hid_report_descriptor));
+  hid.begin();
+
   Serial.begin(115200);
-  delay(5000);
+  delay(1000);
   
   Serial.println("Firmware starting...");
   km.setup();
 }
 
-void loop() {
+void loop() 
+{
   km.update();
+}
+
+
+void tud_hid_report_received_cb(uint8_t instance, uint8_t const* report, uint16_t len) {
+  // handle incoming report
 }
