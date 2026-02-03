@@ -10,6 +10,7 @@
 
 #include <stdbool.h>
 #include <string.h>
+#include "usbd_ep_conf.h"
 #include "usbd_customhid_if.h"
 #include "usbd_desc.h"
 

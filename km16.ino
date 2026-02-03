@@ -2,6 +2,8 @@
 #include "src/RawHID.h"
 
 
+
+
 class Test : public KM16
 {
 public:
@@ -18,6 +20,12 @@ public:
             {
                 int nlc = (getLayerColor() + 1) & 0x07;
                 setLayerColor(nlc);
+            }
+
+            if (key == 3)
+            {
+                // Trigger MCU reset
+                NVIC_SystemReset();
             }
 
             if (key == 4)
@@ -76,18 +84,30 @@ Test km;
 
 void setup()
 {
-    Serial.begin(115200);
     delay(1000);
 
     // Initialize Raw HID
     RawHID.begin();
 
-    Serial.println("Firmware starting...");
     km.setup();
+
+    km.setEnableLeds(true);
+    km.setLayerColor(LAYER_COLOR_MAGENTA);
 }
+
+unsigned long lastTime = 0;
+const unsigned long interval = 2000;
 
 void loop()
 {
+    unsigned long now = millis();
+
+    if (now - lastTime >= interval) {
+        lastTime = now;  // reset timer
+        km.setLayerColor(((now / interval) % 2) ? LAYER_COLOR_BLUE : LAYER_COLOR_MAGENTA);
+    }
+
+
     km.update();
 
     // Check for commands from host
@@ -99,12 +119,37 @@ void loop()
         // Process command based on first byte
         switch (buf[0])
         {
-        case 0x10: // Example: Set LED color
-            // km.setKeyLeds(...);
-            break;
-        case 0x11: // Example: Set underglow
-            // km.setUnderglow(...);
-            break;
+            case 0x10:
+                km.setEnableUnderglow(!!buf[1]);
+                break;
+
+            case 0x11:
+                km.setUnderglow((buf[1] << 16) | (buf[2] << 8) | (buf[3]));
+                break;
+
+            case 0x12:
+                for (int i=0; i<6; i++)
+                {
+                    km.setUnderglow(i, (buf[i*3+1] << 16) | (buf[i*3+2] << 8) | (buf[i*3+3]));
+                }
+                break;
+
+
+            case 0x20:
+                km.setEnableKeyLeds(!!buf[1]);
+                break;
+
+            case 0x21:
+                km.setKeyLeds((buf[1] << 16) | (buf[2] << 8) | (buf[3]));
+                break;
+
+            case 0x22:
+                for (int i=0; i<16; i++)
+                {
+                    km.setKeyLed(i, (buf[i*3+1] << 16) | (buf[i*3+2] << 8) | (buf[i*3+3]));
+                }
+                break;
+
         }
     }
 }

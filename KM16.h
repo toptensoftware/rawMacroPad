@@ -18,14 +18,14 @@ const int keymap[numRows][numCols] = {
     {3, 7, 11, 15, 16},
 };
 
-#define LAYER_COLOR_BLACK 0b000,   // 0
-#define LAYER_COLOR_BLUE 0b001,    // 1
-#define LAYER_COLOR_GREEN 0b010,   // 2
-#define LAYER_COLOR_CYAN 0b011,    // 3
-#define LAYER_COLOR_RED 0b100,     // 4
-#define LAYER_COLOR_MAGENTA 0b101, // 5
-#define LAYER_COLOR_YELLOW 0b110,  // 6
-#define LAYER_COLOR_WHITE 0b111    // 7
+#define LAYER_COLOR_BLACK 0b000   // 0
+#define LAYER_COLOR_BLUE 0b001    // 1
+#define LAYER_COLOR_GREEN 0b010   // 2
+#define LAYER_COLOR_CYAN 0b011    // 3
+#define LAYER_COLOR_RED 0b100     // 4
+#define LAYER_COLOR_MAGENTA 0b101 // 5
+#define LAYER_COLOR_YELLOW 0b110  // 6
+#define LAYER_COLOR_WHITE 0b111   // 7
 
 #define UNDERGLOW_BACK_RIGHT 0
 #define UNDERGLOW_BACK_CENTER 1

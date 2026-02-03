@@ -12,6 +12,7 @@
 extern "C" {
 #endif
 
+#include "usbd_ep_conf.h"
 #include "usbd_customhid.h"
 
 /* Raw HID report size (excluding report ID if used) */
