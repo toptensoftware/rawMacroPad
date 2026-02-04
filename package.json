@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Node.js interface for KM16 custom firmware",
   "author": "Topten Software",
-  "license": "Apache",
+  "license": "MIT",
   "main": "node/km16.js",
   "repository": {
     "type": "git",
