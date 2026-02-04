@@ -1,0 +1,12 @@
+{
+  "name": "@toptensoftware/km16",
+  "version": "1.0.0",
+  "main": "km16.js",
+  "type": "module",
+  "author": "Topten Software",
+  "license": "Apache",
+  "description": "Node package for KM16 RAW HID firmware",
+  "dependencies": {
+    "node-hid": "^3.3.0"
+  }
+}

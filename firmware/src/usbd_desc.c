@@ -67,6 +67,10 @@
   #error "USB VID not properly specified"
 #endif
 
+
+#define USB_MANUFACTURER_STRING "Topten Software"
+#define USB_PRODUCT_STRING "RAW HID Macropad"
+
 /* Manufacturer string: Use the specified string if specified, guess
    based on VID otherwise */
 #if defined(USB_MANUFACTURER_STRING)

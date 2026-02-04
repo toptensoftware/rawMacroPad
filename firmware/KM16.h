@@ -18,14 +18,14 @@ const int keymap[numRows][numCols] = {
     {3, 7, 11, 15, 16},
 };
 
-#define LAYER_COLOR_BLACK 0b000   // 0
-#define LAYER_COLOR_BLUE 0b001    // 1
-#define LAYER_COLOR_GREEN 0b010   // 2
-#define LAYER_COLOR_CYAN 0b011    // 3
-#define LAYER_COLOR_RED 0b100     // 4
-#define LAYER_COLOR_MAGENTA 0b101 // 5
-#define LAYER_COLOR_YELLOW 0b110  // 6
-#define LAYER_COLOR_WHITE 0b111   // 7
+#define INDICATOR_COLOR_BLACK 0b000   // 0
+#define INDICATOR_COLOR_BLUE 0b001    // 1
+#define INDICATOR_COLOR_GREEN 0b010   // 2
+#define INDICATOR_COLOR_CYAN 0b011    // 3
+#define INDICATOR_COLOR_RED 0b100     // 4
+#define INDICATOR_COLOR_MAGENTA 0b101 // 5
+#define INDICATOR_COLOR_YELLOW 0b110  // 6
+#define INDICATOR_COLOR_WHITE 0b111   // 7
 
 #define UNDERGLOW_BACK_RIGHT 0
 #define UNDERGLOW_BACK_CENTER 1
@@ -148,19 +148,19 @@ public:
         return _enableLeds;
     }
 
-    void setLayerColor(int color)
+    void setIndicatorColor(int color)
     {
-        if (_layerColor == color)
+        if (_indicatorColor == color)
             return;
-        _layerColor = color;
+        _indicatorColor = color;
         digitalWrite(PB8, (color & 0x4) ? LOW : HIGH);
         digitalWrite(PB6, (color & 0x2) ? LOW : HIGH);
         digitalWrite(PB7, (color & 0x1) ? LOW : HIGH);
     }
 
-    int getLayerColor()
+    int getIndicatorColor()
     {
-        return _layerColor;
+        return _indicatorColor;
     }
 
     void setEnableUnderglow(bool enable)
@@ -258,7 +258,7 @@ private:
 
     bool _enableLeds = false;
 
-    int _layerColor = 0;
+    int _indicatorColor = 0;
 
     bool _underglowDirty = false;
     bool _underglowEnabled = false;

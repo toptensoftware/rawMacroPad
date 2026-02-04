@@ -9,5 +9,5 @@ arduino-cli compile \
     --export-binaries . > build.log
 
 # Flash
-dfu-util -d 1eaf:0003 -a 2 -D build/STMicroelectronics.stm32.GenF1/km16.ino.bin
+dfu-util -d 1eaf:0003 -a 2 -D build/STMicroelectronics.stm32.GenF1/firmware.ino.bin
 

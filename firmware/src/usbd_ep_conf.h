@@ -72,7 +72,7 @@ typedef struct {
   #define CUSTOM_HID_EPIN_SIZE          0x40U   /* 64 bytes */
   #define CUSTOM_HID_EPOUT_SIZE         0x40U   /* 64 bytes */
 
-  #define DEV_NUM_EP                    0x02U   /* EP0 + EP1 (IN/OUT) */
+  #define DEV_NUM_EP                    0x03U   /* 4 ep_def entries: EP0 OUT/IN + EP1 IN/OUT */
 #endif /* USBD_USE_CUSTOM_HID */
 
 

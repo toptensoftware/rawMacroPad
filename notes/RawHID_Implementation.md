@@ -65,14 +65,16 @@ km16/
 This file contains compiler flags that configure the USB stack:
 
 ```c
--DUSBCON                              // Enable USB
--DUSBD_USE_CUSTOM_HID                 // Use Custom HID mode (not CDC or HID_COMPOSITE)
--DHAL_PCD_MODULE_ENABLED              // Enable USB peripheral driver
--DUSBD_VID=0x0483                     // USB Vendor ID
--DUSBD_PID=0x5750                     // USB Product ID
--DUSBD_CUSTOMHID_OUTREPORT_BUF_SIZE=64  // Receive buffer size
-match actual descriptor)
+-DUSBCON                                    // Enable USB
+-DUSBD_USE_CUSTOM_HID                       // Use Custom HID mode (not CDC or HID_COMPOSITE)
+-DHAL_PCD_MODULE_ENABLED                    // Enable USB peripheral driver
+-DCUSTOM_USBD_VID=0x1209                    // USB Vendor ID
+-DCUSTOM_USBD_PID=0x88BF                    // USB Product ID
+-DUSBD_CUSTOMHID_OUTREPORT_BUF_SIZE=64      // Report buffer size
+-DUSBD_CUSTOM_HID_REPORT_DESC_SIZE=34
 ```
+
+**Note:** USB product and manufacturer strings cannot be reliably passed via `build_opt.h` due to quote escaping issues. Define them directly in `src/usbd_desc.c` instead (see below).
 
 ### Arduino CLI Build Command
 
@@ -93,8 +95,8 @@ arduino-cli compile \
 Edit `build_opt.h`:
 
 ```c
--DUSBD_VID=0x1234    // Your vendor ID
--DUSBD_PID=0x5678    // Your product ID
+-DCUSTOM_USBD_VID=0x1209    // Your vendor ID
+-DCUSTOM_USBD_PID=0x88BF    // Your product ID
 ```
 
 **Note:** Using someone else's VID without authorization violates USB-IF rules. For personal projects, you can use:
@@ -103,14 +105,15 @@ Edit `build_opt.h`:
 
 ### USB Product and Manufacturer Strings
 
-Edit `build_opt.h` to add:
+Edit `src/usbd_desc.c` directly to set these strings. Find the `USBD_MANUFACTURER_STRING` and `USBD_CLASS_PRODUCT_FS_STRING` definitions and modify them:
 
 ```c
--DUSB_PRODUCT_STRING="My Device Name"
--DUSB_MANUFACTURER_STRING="My Company"
+#define USBD_MANUFACTURER_STRING "My Company"
+// ...
+#define USBD_CLASS_PRODUCT_FS_STRING "My Device Name"
 ```
 
-Or edit `src/usbd_desc.c` directly to modify the string definitions.
+**Note:** Passing string macros via `-D` flags in `build_opt.h` doesn't work reliably due to quote escaping issues through the build system.
 
 ### Report Size
 
