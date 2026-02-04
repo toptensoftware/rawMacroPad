@@ -40,20 +40,21 @@ STM32F103 ARM Cortex-M3 (or similar)
 [R0C3][R1C3][R2C3][R3C3]           [R3C4] 
 ```
 
-Row Pins:    PB0, PB10, PB2, PB1
-Column Pins: PA0, PA1, PA3, PA2, PA4
+
+* Row Pins: `{ PB0, PB10, PB2, PB1 }`
+* Column Pins: `{ PA0, PA1, PA3, PA2, PA4 }`
 
 
 ## Rotary Encoders
 
-Main: PA7 (A), PC15 (B)
-Left: PC14 (A), PA6 (B)
-Right: PA5 (A), PC13 (B)
+* Main: `PA7` (A), `PC15` (B)
+* Left: `PC14` (A), `PA6` (B)
+* Right: `PA5` (A), `PC13` (B)
 
 
 ## LED Power Control
 
-PB14 - Active HIGH controls power to all LEDs
+`PB14` - Active HIGH controls power to all LEDs
 
 Notes:
 
@@ -69,17 +70,17 @@ Notes:
 
 ## Layer Indicator LEDs
 
-PB6 = Green (active LOW)
-PB7 = Blue (active LOW)
-PB8 = Red (active LOW)
+* `PB6` = Green (active LOW)
+* `PB7` = Blue (active LOW)
+* `PB8` = Red (active LOW)
 
 (requires PB14 HIGH)
 
 
 ## Underglow LEDs
 
-PB12 = Power enable (active LOW)
-PB9 = WS2812 data (6 LEDs)
+* `PB12` = Power enable (active LOW)
+* `PB9` = WS2812 data (6 LEDs)
 
 LED Positions: (when viewed from above device):
 
@@ -107,8 +108,8 @@ ie:
 
 Only after un-blanking outputs will WS2812 data on PB11 control the LEDs.
 
-PB11 = WS2812 data (17 LEDs, last not used)
-PB13 = output blank (active HIGH)
+* `PB11` = WS2812 data (17 LEDs, last not used)
+* `PB13` = output blank (active HIGH)
 
 LED positions:
 
