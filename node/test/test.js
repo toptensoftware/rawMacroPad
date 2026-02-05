@@ -26,7 +26,9 @@ km16.on("input", (e) => {
     if (e.encoder == 0)
     {
         keys = (keys + e.delta + 8) % 8;
-        km16.setKeyLeds(mapColorIndexToRGB(keys));
+        let arr = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
+        arr[12] = mapColorIndexToRGB(keys);
+        km16.setKeyLeds(arr);
     }
 
     // Top left encoder controls underglow LEDs

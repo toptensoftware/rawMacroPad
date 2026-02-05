@@ -6,6 +6,7 @@ const VID = 0x1209;
 const PID = 0x88BF;
 const REPORT_SIZE = 64;
 
+let ledmap = [ 0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 15, 14, 13, 12];
 
 export class KM16 extends EventEmitter
 {
@@ -108,10 +109,28 @@ export class KM16 extends EventEmitter
 
     setKeyLeds(color)
     {
-        this.#buf[1] = 0x21;
-        this.#buf[2] = (color >> 16) & 0xFF;
-        this.#buf[3] = (color >> 8) & 0xFF;
-        this.#buf[4] = color & 0xFF;
+        if (!Array.isArray(color))
+        {
+            this.#buf[1] = 0x21;
+            this.#buf[2] = (color >> 16) & 0xFF;
+            this.#buf[3] = (color >> 8) & 0xFF;
+            this.#buf[4] = color & 0xFF;
+        }
+        else
+        {
+            if (color.length != 16)
+                throw new Error("Key LED array must have 16 entries");
+
+            this.#buf[1] = 0x22;
+            for (let i=0; i<16; i++)
+            {
+                let pos = ledmap[i] * 3;
+                this.#buf[pos + 2] = (color[i] >> 16) & 0xFF;
+                this.#buf[pos + 3] = (color[i] >> 8) & 0xFF;
+                this.#buf[pos + 4] = color[i] & 0xFF;
+            }
+        }
+
         this.#hid.write(this.#buf);
     }
 
