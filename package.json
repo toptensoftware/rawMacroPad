@@ -4,7 +4,7 @@
   "description": "Node.js interface for macropads supporting the Raw Macro Pad protocol",
   "author": "Topten Software",
   "license": "MIT",
-  "main": "node/idnex.js",
+  "main": "node/index.js",
   "type": "module",
   "repository": {
     "type": "git",
