@@ -273,7 +273,7 @@ The build process should work on any platform where arduino-cli is supported.
     On Linux/macOS (or Windows with Git Bash), run the provided script:
 
     ```
-    cd firmware
+    cd firmware/km16
     ./build-and-flash
     ```
 
