@@ -2,7 +2,7 @@
 #include "src/RawHID.h"
 
 
-
+//#define DEV_RESET
 
 class Test : public KM16
 {
@@ -11,11 +11,14 @@ public:
     {
     }
 
+    #ifdef DEV_RESET
     bool _reset1Pressed = false;
     bool _reset2Pressed = false;
+    #endif
 
     virtual void onKey(int key, bool pressed)
     {
+        #if DEV_RESET
         // Press knob 2 and 3 to trigger reset
         if (key == 17)
             _reset1Pressed = pressed;
@@ -26,6 +29,7 @@ public:
             // Trigger MCU reset
             NVIC_SystemReset();
         }
+        #endif
 
         // Send key event via Raw HID
         uint8_t report[64] = {0};
@@ -121,48 +125,103 @@ void loop()
         switch (buf[0])
         {
             case 0x01:
-                // Set indicator
-                km.setIndicatorColor(buf[1]);
-                break;
-
-            case 0x02:
                 // Set/reset watchdog timer
                 watchDogTimeOut = (buf[1] << 8) | buf[2];
                 watchDogTriggered = false;
                 lastWatchDogPing = now;
                 break;
 
-            case 0x10:
-                km.setEnableUnderglow(!!buf[1]);
+            case 0x02:
+                // Enable/disable all LEDs
+                km.setEnableLeds(!!buf[1]);
                 break;
 
-            case 0x11:
-                km.setUnderglow((buf[1] << 16) | (buf[2] << 8) | (buf[3]));
-                break;
-
-            case 0x12:
-                for (int i=0; i<6; i++)
+            case 0x03:
+                // Enable LED chain
+                switch (buf[1])
                 {
-                    km.setUnderglow(i, (buf[i*3+1] << 16) | (buf[i*3+2] << 8) | (buf[i*3+3]));
+                    case 0:
+                        km.setEnableKeyLeds(!!buf[2]);
+                        break;
+
+                    case 1:
+                        km.setEnableUnderglow(!!buf[2]);
+                        break;
+
+                    case 2:
+                        // no option
+                        break;
                 }
                 break;
 
-
-            case 0x20:
-                km.setEnableKeyLeds(!!buf[1]);
-                break;
-
-            case 0x21:
-                km.setKeyLeds((buf[1] << 16) | (buf[2] << 8) | (buf[3]));
-                break;
-
-            case 0x22:
-                for (int i=0; i<16; i++)
+            case 0x04:
+                // Set all LEDs to single color
+                switch (buf[1])
                 {
-                    km.setKeyLed(i, (buf[i*3+1] << 16) | (buf[i*3+2] << 8) | (buf[i*3+3]));
+                    case 0:
+                        km.setKeyLeds((buf[2] << 16) | (buf[3] << 8) | (buf[4]));
+                        break;
+
+                    case 1:
+                        km.setUnderglow((buf[2] << 16) | (buf[3] << 8) | (buf[4]));
+                        break;
+
+                    case 2:
+                        km.setIndicatorColor(((buf[2] & 0x80) >> 5) | ((buf[3] & 0x80) >> 6) | ((buf[4] & 0x80) >> 7));
+                        break;
+
                 }
                 break;
 
+            case 0x05:
+                // Set all LEDs to color array
+                switch (buf[1])
+                {
+                    case 0:
+                        for (int i=0; i<16; i++)
+                        {
+                            km.setKeyLed(i, (buf[i*3+2] << 16) | (buf[i*3+3] << 8) | (buf[i*3+4]));
+                        }
+                        break;
+
+                    case 1:
+                        for (int i=0; i<6; i++)
+                        {
+                            km.setUnderglow(i, (buf[i*3+2] << 16) | (buf[i*3+3] << 8) | (buf[i*3+4]));
+                        }
+                        break;
+
+                    case 2:
+                        km.setIndicatorColor(((buf[2] & 0x80) >> 5) | ((buf[3] & 0x80) >> 6) | ((buf[4] & 0x80) >> 7));
+                        break;
+                }
+                break;
+
+            case 0x06:
+                // Set a single led
+                switch (buf[1])
+                {
+                    case 0:
+                        km.setKeyLed(buf[2], (buf[+3] << 16) | (buf[4] << 8) | (buf[5]));
+                        break;
+
+                    case 1:
+                        km.setUnderglow(buf[2], (buf[3] << 16) | (buf[4] << 8) | (buf[5]));
+                        break;
+
+                    case 2:
+                        if (buf[2] == 0)
+                        {
+                            km.setIndicatorColor(((buf[3] & 0x80) >> 5) | ((buf[4] & 0x80) >> 6) | ((buf[5] & 0x80) >> 7));
+                        }
+                        break;
+                }
+
+
+            case 0xFF:
+                // Trigger MCU reset
+                NVIC_SystemReset();
+                break;
         }
     }
 }

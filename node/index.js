@@ -6,8 +6,6 @@ const VID = 0x1209;
 const PID = 0x88BF;
 const REPORT_SIZE = 64;
 
-let ledmap = [ 0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 15, 14, 13, 12];
-
 export class KM16 extends EventEmitter
 {
     constructor()
@@ -54,7 +52,7 @@ export class KM16 extends EventEmitter
 
         // Ping helper
         let ping = () => {
-            this.#buf[1] = 0x02;
+            this.#buf[1] = 0x01;
             this.#buf[2] = (this.#watchDogInterval >> 8) & 0xFF;
             this.#buf[3] = this.#watchDogInterval & 0xFF;
             this.#hid.write(this.#buf);
@@ -77,60 +75,55 @@ export class KM16 extends EventEmitter
         }
     }
 
-    setIndicator(color)
+    enableAllLed(enable)
     {
-        this.#buf[1] = 0x01;
-        this.#buf[2] = color;
-        this.#hid.write(this.#buf);
-    }
-
-    enableUnderglow(enable)
-    {
-        this.#buf[1] = 0x10;
+        this.#buf[1] = 0x02;
         this.#buf[2] = enable ? 1 : 0;
         this.#hid.write(this.#buf);
     }
 
-    setUnderglow(color)
+    enableLeds(chain, enable)
     {
-        this.#buf[1] = 0x11;
-        this.#buf[2] = (color >> 16) & 0xFF;
-        this.#buf[3] = (color >> 8) & 0xFF;
-        this.#buf[4] = color & 0xFF;
-        this.#hid.write(this.#buf);
-    }
-    
-    enableKeyLeds(enable)
-    {
-        this.#buf[1] = 0x20;
-        this.#buf[2] = enable ? 1 : 0;
+        this.#buf[1] = 0x03;
+        this.#buf[2] = chain;
+        this.#buf[3] = enable ? 1 : 0;
         this.#hid.write(this.#buf);
     }
 
-    setKeyLeds(color)
+
+    setLeds(chain, color)
     {
         if (!Array.isArray(color))
         {
-            this.#buf[1] = 0x21;
-            this.#buf[2] = (color >> 16) & 0xFF;
-            this.#buf[3] = (color >> 8) & 0xFF;
-            this.#buf[4] = color & 0xFF;
+            this.#buf[1] = 0x04;
+            this.#buf[2] = chain;
+            this.#buf[3] = (color >> 16) & 0xFF;
+            this.#buf[4] = (color >> 8) & 0xFF;
+            this.#buf[5] = color & 0xFF;
         }
         else
         {
-            if (color.length != 16)
-                throw new Error("Key LED array must have 16 entries");
-
-            this.#buf[1] = 0x22;
-            for (let i=0; i<16; i++)
+            this.#buf[1] = 0x05;
+            this.#buf[2] = chain;
+            for (let i=0; i<color.length; i++)
             {
-                let pos = ledmap[i] * 3;
-                this.#buf[pos + 2] = (color[i] >> 16) & 0xFF;
-                this.#buf[pos + 3] = (color[i] >> 8) & 0xFF;
-                this.#buf[pos + 4] = color[i] & 0xFF;
+                this.#buf[i*3 + 3] = (color[i] >> 16) & 0xFF;
+                this.#buf[i*3 + 4] = (color[i] >> 8) & 0xFF;
+                this.#buf[i*3 + 5] = color[i] & 0xFF;
             }
         }
 
+        this.#hid.write(this.#buf);
+    }
+
+    setLed(chain, index, color)
+    {
+        this.#buf[1] = 0x04;
+        this.#buf[2] = chain;
+        this.#buf[3] = index;
+        this.#buf[4] = (color >> 16) & 0xFF;
+        this.#buf[5] = (color >> 8) & 0xFF;
+        this.#buf[6] = color & 0xFF;
         this.#hid.write(this.#buf);
     }
 

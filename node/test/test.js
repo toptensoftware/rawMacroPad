@@ -16,19 +16,23 @@ km16.setIndicator(indicator);
 km16.enableUnderglow(true);
 km16.enableKeyLeds(true);
 
+let activeKey = 0;
+let arr = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
+
 // Input handler
 km16.on("input", (e) => {
 
     // Log it
     console.log(e);
 
+    if (e.key && e.press)
+        activeKey = e.key;
+
     // Main encoder controls key LEDs
     if (e.encoder == 0)
     {
-        keys = (keys + e.delta + 8) % 8;
-        let arr = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
-        arr[12] = mapColorIndexToRGB(keys);
-        km16.setKeyLeds(arr);
+        arr[activeKey] = (arr[activeKey] + e.delta + 8) % 8;
+        km16.setKeyLeds(arr.map(mapColorIndexToRGB));
     }
 
     // Top left encoder controls underglow LEDs

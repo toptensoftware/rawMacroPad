@@ -18,6 +18,10 @@ const int keymap[numRows][numCols] = {
     {3, 7, 11, 15, 16},
 };
 
+const int ledmap[] = {
+    0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 15, 14, 13, 12
+};
+
 #define INDICATOR_COLOR_BLACK 0b000   // 0
 #define INDICATOR_COLOR_BLUE 0b001    // 1
 #define INDICATOR_COLOR_GREEN 0b010   // 2
@@ -232,6 +236,7 @@ public:
 
     void setKeyLed(int index, unsigned long rgb)
     {
+        index = ledmap[index];
         if (_keyleds[index] == rgb)
             return;
         _keyleds[index] = rgb;
@@ -270,17 +275,17 @@ private:
 
     static void enc0_callback(void *ctx, int delta)
     {
-        ((KM16 *)ctx)->onEncoder(0, delta);
+        ((KM16 *)ctx)->onEncoder(16, delta);
     }
 
     static void enc1_callback(void *ctx, int delta)
     {
-        ((KM16 *)ctx)->onEncoder(1, delta);
+        ((KM16 *)ctx)->onEncoder(17, delta);
     }
 
     static void enc2_callback(void *ctx, int delta)
     {
-        ((KM16 *)ctx)->onEncoder(2, delta);
+        ((KM16 *)ctx)->onEncoder(18, delta);
     }
 
     void pollMatrix()
@@ -348,16 +353,16 @@ private:
             if (byte & 0x80)
             {
                 *bsrr = (1 << bit);
-                __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n");
+                __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n");
                 *bsrr = (1 << (bit + 16));
-                __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n");
+                __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n");
             }
             else
             {
                 *bsrr = (1 << bit);
-                __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n");
+                __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n");
                 *bsrr = (1 << (bit + 16));
-                __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n");
+                __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n");
             }
             byte <<= 1;
         }

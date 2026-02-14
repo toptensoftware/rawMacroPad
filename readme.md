@@ -1,9 +1,16 @@
-# MMD-KM16 Custom RAW HID Firmware
+# RMP - Raw Macro Pad HID Interface
 
-This is a custom firmware and Node.js client library for the MMD KM16 macropad.
+RawMacroPad is a custom RAW HID protocol for macropad keyboards.
+
+This project provides custom firmware for supported macropads and Node.js client library
+for communicating with any device that supports the protocol.
+
+Currently, the MMD KM16 is the only supported device.  
 
 ![MMD KM16](km16.jpg)
 
+While most of the documentation currently references just the KM16 device, the protocol itself 
+is device agnostic and at some point firmware for other devices may be implemented.
 
 
 ## Background
@@ -38,6 +45,119 @@ bootloaders, or behavior. Variations in manufacturing, hardware revisions, or re
 may cause this firmware to be incompatible with or damaging to your device.
 
 Before flashing, ensure you have backed up your original firmware and understand the risks involved.
+
+## RawMacroPad Protoco Spec
+
+The RawMacroPad protocol follows the standard RAW HID convention of 64-byte packets sent both
+from the device to host and host to device.
+
+The following packets are defined:
+
+### Device to Host
+
+Key Press Event:
+
+```
+packet[0] = 0x01
+packet[1] = key index
+packet[2] = 1 for press, 0 for release
+```
+
+Encoder Event:
+
+```
+packet[0] = 0x02
+packet[1] = encoder index
+packet[2] = signed char direction (-1 or 1)
+```
+
+### Host to Device
+
+**Note: when sending packets using node_hid the first byte is always zero, but the device receieves from byte 1 onwards which is what's documented here
+
+Set Watchdog Timer and Ping 
+
+(device enters error mode if another set/ping event not received before the time out).
+
+```
+packet[0] = 0x01
+packet[1] = MSB ping interval in milliseconds 
+packet[2] = MSB ping interval in milliseconds 
+```
+
+Enable All LEDs
+
+```
+packet[0] = 0x02
+packet[1] = non-zero to enable, zero to disable
+```
+
+Enable LED Chain
+
+```
+packet[0] = 0x03
+packet[1] = led chain index
+packet[2] = non-zero to enable, zero to disable
+```
+
+Set LED Chain to Single Color
+
+```
+packet[0] = 0x04
+packet[1] = led chain index
+packet[2] = R byte
+packet[3] = G byte
+packet[4] = B byte
+```
+
+Set LED Chain
+
+```
+packet[0] = 0x05
+packet[1] = led chain index
+packet[2,3,4] = RGB for led 0
+packet[5,6,7] = RGB for led 1
+etc...
+```
+
+Set Individual LED
+
+```
+packet[0] = 0x06
+packet[1] = led chain index
+packet[2] = led index
+packet[3] = R byte
+packet[4] = G byte
+packet[5] = B byte
+```
+
+Reset Device
+
+```
+packet[0] = 0xFF
+```
+
+
+## KM16 Protocol Mapping
+
+The KM16 is mapped to the protocol as follows:
+
+* Main Key Pad Keys - key indicies 0-15 (from top-left to bottom-right in RTL order)
+* Main Encoder - key index 16
+* Small Left Encoder - key index 17
+* Small Right Encoder - key index 18
+
+For encoders, the same index is used for both push button press/release events and the encoder turn events.
+
+* LED Chain 0 - under-key LEDs - total 16 same numbering as key press indicies
+* LED Chain 1 - under-glow LEDs - total 16
+* LED Chain 2 - layer indicator LED - total 1.
+
+Notes the layer indicator LED:
+
+* only supports 1 bit color which is mapped from the most-significant bit of each of the RGB component values
+* doesn't support enable LED chain functionality
+
 
 
 ## Hardware Spec
@@ -180,7 +300,7 @@ is untested.
 To install the Node.js package:
 
 ```
-npm install --save @toptensoftware/km16
+npm install --save @toptensoftware/rawMacroPad
 ```
 
 See the [example program](./node/test/test.js) for how to use it. See also the [km16.js](./node/km16.js) file itself.

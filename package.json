@@ -1,13 +1,14 @@
 {
-  "name": "@toptensoftware/km16",
+  "name": "@toptensoftware/rawMacroPad",
   "version": "1.0.0",
-  "description": "Node.js interface for KM16 custom firmware",
+  "description": "Node.js interface for macropads supporting the Raw Macro Pad protocol",
   "author": "Topten Software",
   "license": "MIT",
-  "main": "node/km16.js",
+  "main": "node/idnex.js",
+  "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/toptensoftware/km16"
+    "url": "https://github.com/toptensoftware/rawMacroPad"
   },
   "dependencies": {
     "node-hid": "^3.3.0"
