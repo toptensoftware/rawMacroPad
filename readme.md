@@ -1,4 +1,4 @@
-# RMP - Raw Macro Pad HID Interface
+# RawMacroPad - Raw Macro Pad HID Interface
 
 RawMacroPad is a custom RAW HID protocol for macropad keyboards.
 
@@ -152,7 +152,7 @@ The KM16 is mapped to the protocol as follows:
 For encoders, the same index is used for both push button press/release events and the encoder turn events.
 
 * LED Chain 0 - under-key LEDs - total 16 same numbering as key press indicies
-* LED Chain 1 - under-glow LEDs - total 16
+* LED Chain 1 - under-glow LEDs - total 6
 * LED Chain 2 - layer indicator LED - total 1.
 
 Notes the layer indicator LED:
