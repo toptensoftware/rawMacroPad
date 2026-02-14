@@ -6,7 +6,7 @@ const VID = 0x1209;
 const PID = 0x88BF;
 const REPORT_SIZE = 64;
 
-export class KM16 extends EventEmitter
+export class RawMacroPad extends EventEmitter
 {
     constructor()
     {

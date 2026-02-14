@@ -51,6 +51,8 @@ Before flashing, ensure you have backed up your original firmware and understand
 The RawMacroPad protocol follows the standard RAW HID convention of 64-byte packets sent both
 from the device to host and host to device.
 
+RawMacroPad devices have VID/PID of 0x1209/0x88BF (registered via pid-codes)
+
 The following packets are defined:
 
 ### Device to Host

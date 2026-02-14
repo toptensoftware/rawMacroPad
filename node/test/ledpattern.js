@@ -1,7 +1,7 @@
-import { KM16 } from "../km16.js";
+import { RawMacroPad } from "../index.js";
 
 // Create KM16 instance
-let km16 = new KM16();
+let km16 = new RawMacroPad();
 
 function sleep(ms) { return new Promise((resolve) => setTimeout(resolve, ms)) }
 
