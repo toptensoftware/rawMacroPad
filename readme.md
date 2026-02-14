@@ -46,7 +46,7 @@ may cause this firmware to be incompatible with or damaging to your device.
 
 Before flashing, ensure you have backed up your original firmware and understand the risks involved.
 
-## RawMacroPad Protoco Spec
+## RawMacroPad Protocol Spec
 
 The RawMacroPad protocol follows the standard RAW HID convention of 64-byte packets sent both
 from the device to host and host to device.
@@ -75,7 +75,7 @@ packet[2] = signed char direction (-1 or 1)
 
 ### Host to Device
 
-**Note: when sending packets using node_hid the first byte is always zero, but the device receieves from byte 1 onwards which is what's documented here
+**Note: when sending packets using node_hid the first byte is always zero, but the device receieves from byte 1 onwards which is what's documented here**
 
 Set Watchdog Timer and Ping 
 
