@@ -293,7 +293,13 @@ The build process should work on any platform where arduino-cli is supported.
    LED should be flashing red, indicating the watchdog is active and no client is connected.
 
 
-## Setting up Linux Permissions
+## Notes for Linux
+
+Install hid raw package:
+
+```
+sudo apt install libhidapi-hidraw0
+```
 
 To access the device from non-sudo user under Linux you need to setup a udev rule.
 
@@ -329,6 +335,12 @@ The python library has only been tested on:
 
 * Windows 11, Python 3.14.2
 * 64-bit Raspian, Python 3.13.5
+
+Requires hid package:
+
+```
+pip install hid              # recommend using a virtual environment, no sudo
+```
 
 See the [example program](./python/test/test.js) for how to use it. See also the [implementation file](./python/raw_macro_pad.py) itself.
 
