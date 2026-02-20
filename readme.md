@@ -26,7 +26,7 @@ because it:
   regardless of operating system input focus)
 * Allows direct control of LED lighting without introducing flash-wear.
 
-The project provides a custom firmware with RAW HID USB interface and a Node.js client
+The project provides a custom firmware with RAW HID USB interface and a Node.js and Python client
 library for interfacing with the device.
 
 The firmware also includes an optional "watch-dog" timer that displays a flashing red indicator on the device
@@ -295,9 +295,9 @@ The build process should work on any platform where arduino-cli is supported.
 
 ## Using the Node.js Library
 
-The Node.js library has been tested on Windows with Node.js v22. It should work on any OS and
-Node.js version where [node-hid](https://github.com/node-hid/node-hid) is supported, but this
-is untested.
+The Node.js library has been tested on Windows with Node.js v22 and on 64-bit Raspian with Node.js v24.
+It should work on any OS and Node.js version where [node-hid](https://github.com/node-hid/node-hid) is
+supported, but this is untested.
 
 To install the Node.js package:
 
@@ -305,8 +305,15 @@ To install the Node.js package:
 npm install --save @toptensoftware/rawMacroPad
 ```
 
-See the [example program](./node/test/test.js) for how to use it. See also the [km16.js](./node/km16.js) file itself.
+See the [example program](./node/test/test.js) for how to use it. See also the [implementation file](./node/index.js) itself.
 
+
+## Using the Python Library
+
+The python library has only been tested on Windows with Python 3.14.2.  In should work on any platform where the `hid` package
+is supported.
+
+See the [example program](./python/test/test.js) for how to use it. See also the [implementation file](./python/raw_macro_pad.py) itself.
 
 ## License
 
