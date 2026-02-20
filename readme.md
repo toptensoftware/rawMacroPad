@@ -306,7 +306,11 @@ sudo udevadm trigger
 
 ## Using the Node.js Library
 
-The Node.js library has been tested on Windows with Node.js v22 and on 64-bit Raspian with Node.js v24.
+The Node.js library has been tested on:
+
+* Windows 11, Node.js v22 
+* 64-bit Raspian, Node.js v24.
+
 It should work on any OS and Node.js version where [node-hid](https://github.com/node-hid/node-hid) is
 supported, but this is untested.
 
@@ -321,8 +325,10 @@ See the [example program](./node/test/test.js) for how to use it. See also the [
 
 ## Using the Python Library
 
-The python library has only been tested on Windows with Python 3.14.2.  In should work on any platform where the `hid` package
-is supported.
+The python library has only been tested on:
+
+* Windows 11, Python 3.14.2
+* 64-bit Raspian, Python 3.13.5
 
 See the [example program](./python/test/test.js) for how to use it. See also the [implementation file](./python/raw_macro_pad.py) itself.
 
