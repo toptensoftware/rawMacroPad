@@ -293,6 +293,17 @@ The build process should work on any platform where arduino-cli is supported.
    LED should be flashing red, indicating the watchdog is active and no client is connected.
 
 
+## Setting up Linux Permissions
+
+To access the device from non-sudo user under Linux you need to setup a udev rule.
+
+```
+sudo cp 99-raw-macro-pad.rules /etc/udev/rules.d/
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
+
+
 ## Using the Node.js Library
 
 The Node.js library has been tested on Windows with Node.js v22 and on 64-bit Raspian with Node.js v24.
