@@ -8,8 +8,11 @@ REPORT_SIZE = 64
 
 class RawMacroPad:
     def __init__(self):
-        self._hid = hid.device()
-        self._hid.open(VID, PID)
+        if hasattr(hid, 'Device'):
+            self._hid = hid.Device(VID, PID)
+        else:
+            self._hid = hid.device()
+            self._hid.open(VID, PID)
         self._buf = bytearray(REPORT_SIZE + 1)
         self._buf[0] = 0
         self._listeners = {}
